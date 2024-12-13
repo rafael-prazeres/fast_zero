@@ -44,3 +44,35 @@ def test_read_users(client):
             }
         ]
     }
+
+
+def test_update_user(client):
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'user',
+            'email': 'user@example.com',
+            'password': '654321',
+        }
+    )
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'username': 'user',
+        'email': 'user@example.com',
+        'id': 1,
+    }
+
+
+def test_update_user_not_found(client):
+    response = client.put(
+        '/users/2',
+        json={
+            'username': 'user',
+            'email': 'user@example.com',
+            'password': '654321',
+        }
+    )
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {
+        'detail': 'User not found',
+    }
