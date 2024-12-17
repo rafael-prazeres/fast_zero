@@ -52,7 +52,7 @@ def test_read_user(client):
     assert response.json() == {
         'username': 'rafael.prazeres',
         'email': 'rafael.prazeres@ufrn.br',
-        'id': 1
+        'id': 1,
     }
 
 
@@ -69,7 +69,7 @@ def test_update_user(client):
             'username': 'user',
             'email': 'user@example.com',
             'password': '654321',
-        }
+        },
     )
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
@@ -86,7 +86,7 @@ def test_update_user_not_found(client):
             'username': 'user',
             'email': 'user@example.com',
             'password': '654321',
-        }
+        },
     )
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {
