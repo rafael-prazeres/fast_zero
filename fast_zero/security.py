@@ -17,9 +17,6 @@ from fast_zero.settings import Settings
 settings = Settings()
 
 
-SECRET_KEY = 'your-secret-key'
-ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = PasswordHash.recommended()
 oauth2_schema = OAuth2PasswordBearer(tokenUrl='auth/token')
 
@@ -57,7 +54,11 @@ def get_current_user(
     )
 
     try:
-        payload = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
+        )
         username = payload.get('sub')
         if not username:
             raise credentials_exception
