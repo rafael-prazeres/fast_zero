@@ -79,7 +79,7 @@ async def patch_todo(
     if not db_todo:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail="Task not found.",
+            detail='Task not found.',
         )
 
     for key, value in todo.model_dump(exclude_unset=True).items():
@@ -100,7 +100,7 @@ async def delete_todo(todo_id: int, session: Session, user: CurrentUser):
 
     if not todo:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="Task not found."
+            status_code=HTTPStatus.NOT_FOUND, detail='Task not found.'
         )
 
     await session.delete(todo)
