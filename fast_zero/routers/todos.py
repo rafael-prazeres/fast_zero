@@ -44,9 +44,9 @@ async def create_todo(
 
 @router.get('/', response_model=TodoList)
 async def list_todos(
-        session: Session,
-        user: CurrentUser,
-        todo_filter: Annotated[FilterTodo, Query()],
+    session: Session,
+    user: CurrentUser,
+    todo_filter: Annotated[FilterTodo, Query()],
 ):
     query = select(Todo).where(Todo.user_id == user.id)
 
@@ -70,7 +70,7 @@ async def list_todos(
 
 @router.patch('/{todo_id}', response_model=TodoPublic)
 async def patch_todo(
-        todo_id: int, session: Session, user: CurrentUser, todo: TodoUpdate
+    todo_id: int, session: Session, user: CurrentUser, todo: TodoUpdate
 ):
     db_todo = await session.scalar(
         select(Todo).where(Todo.user_id == user.id, Todo.id == todo_id)

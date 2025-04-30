@@ -27,16 +27,17 @@ async def test_create_user(session, mock_db_time):
 
 
 @pytest.mark.asyncio
-async def test_create_todo(session, user):
-    todo = Todo(
-        title='Test Todo',
-        description='Test Desc',
-        state='draft',
-        user_id=user.id,
-    )
+async def test_create_todo(session, user, mock_db_time):
+    with mock_db_time(model=Todo) as time:
+        todo = Todo(
+            title='Test Todo',
+            description='Test Desc',
+            state='draft',
+            user_id=user.id,
+        )
 
-    session.add(todo)
-    await session.commit()
+        session.add(todo)
+        await session.commit()
 
     todo = await session.scalar(select(Todo))
 
@@ -46,6 +47,8 @@ async def test_create_todo(session, user):
         'state': 'draft',
         'title': 'Test Todo',
         'user_id': user.id,
+        'created_at': time,
+        'updated_at': time,
     }
 
 
@@ -65,3 +68,19 @@ async def test_user_todo_relationship(session, user: User):
     user = await session.scalar(select(User).where(User.id == user.id))
 
     assert user.todos == [todo]
+
+
+@pytest.mark.asyncio
+async def test_create_todo_error(session, user):
+    todo = Todo(
+        title='Test Todo',
+        description='Test Desc',
+        state='test',
+        user_id=user.id,
+    )
+
+    session.add(todo)
+    await session.commit()
+
+    with pytest.raises(LookupError):
+        await session.scalar(select(Todo))
